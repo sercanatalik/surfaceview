@@ -11,42 +11,62 @@ import {
   HTMLPerspectiveViewerElement,
 } from "@finos/perspective-viewer";
 
+import { useSubscription, gql } from '@apollo/client';
 
-
-// ==============================|| SAMPLE PAGE ||============================== //
-
-// const websocket = perspective.websocket(`ws://${window.location.host}/ws`);
-// const defaultTables = {
-//   superstore: websocket.open_table("superstore"),
-//   timeseries: websocket.open_table("timeseries"),
-//   ticking: websocket.open_table("ticking"),
-// };
-// console.log(defaultTables)
 
 const worker = perspective.worker();
 
-const getTable = async () => {
-  const DATA_URL = "https://cdn.jsdelivr.net/npm/superstore-arrow/superstore.arrow";
 
-  const req = fetch(DATA_URL);
-  const resp = await req;
-  const buffer = await resp.arrayBuffer();
-  return await worker.table(buffer);
-};
+const GET_TICKERS = gql`
+subscription tickers {
+    tickers {
+      ticker
+      name
+      last
+      change
+    }
+  }
+`;
+
+
+
+
+
+
 
 
 const CreditRisk = ():React.ReactElement => {
+
+  const [comments, setComments] = React.useState<any>([{ticker:'loading',name:'loading',last:'loading',change:'loading'}]);
+
+
+   useSubscription(GET_TICKERS,{  onData: (data) => {
+    
+    const message  = data.data.data
+    if (message){
+      setComments(message.tickers)
+    }
+   
+  } });
+  
   const viewer = React.useRef<HTMLPerspectiveViewerElement>(null);
 
   React.useEffect(() => {
-      getTable().then((table) => {
-        
-          if (viewer.current) {
-              viewer.current.load(Promise.resolve(table));
-            viewer.current.setAttribute("view", "y_line");   
+          if (viewer.current ) {
+            
+            if(comments){
+              viewer.current.load(Promise.resolve( worker.table(comments)));
+              // viewer.current.restore({});
+            }
+            
+            
+            
+              
           }
       });
-  }, []);
+
+
+  
  return  <perspective-viewer ref={viewer} ></perspective-viewer>;
 };
 
