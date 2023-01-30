@@ -8,7 +8,7 @@ import { Box, Button, Grid, Divider, Typography, useMediaQuery } from '@mui/mate
 import useAuth from 'hooks/useAuth';
 import AnimateButton from 'components/@extended/AnimateButton';
 import AuthWrapper from 'sections/auth/AuthWrapper';
-import FirebaseSocial from 'sections/auth/auth-forms/FirebaseSocial';
+// import FirebaseSocial from 'sections/auth/auth-forms/FirebaseSocial';
 
 // ================================|| CHECK MAIL ||================================ //
 
@@ -51,7 +51,7 @@ const CheckMail = () => {
           </Divider>
         </Grid>
         <Grid item xs={12}>
-          <FirebaseSocial />
+          {/* <FirebaseSocial /> */}
         </Grid>
       </Grid>
     </AuthWrapper>

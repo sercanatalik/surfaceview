@@ -29,12 +29,6 @@ subscription tickers {
 `;
 
 
-
-
-
-
-
-
 const CreditRisk = ():React.ReactElement => {
 
   const [comments, setComments] = React.useState<any>([{ticker:'loading',name:'loading',last:'loading',change:'loading'}]);
